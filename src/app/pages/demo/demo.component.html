@@ -1,0 +1,11 @@
+<button (mousedown)="beginHeat()" (mouseup)="endHeat()" (mouseout)="endHeat()">Apply Heat</button>
+
+<ul>
+  <li>Temperature: {{ panel.temperature }}</li>
+  <li>Durability: {{ panel.durability }}</li>
+  <li>Value: {{ panel.value }}</li>
+</ul>
+
+<div class="dials">
+  <div class="temperature" [style.transform]="temperatureDial()"></div>
+</div>

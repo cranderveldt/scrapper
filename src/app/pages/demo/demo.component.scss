@@ -1,0 +1,11 @@
+.dials {
+  padding-top: 400px;
+  .temperature {
+    width: 200px;
+    height: 8px;
+    background: black;
+    border-radius: 4px 0 0 4px;
+    transform-origin: 100% 50%;
+    transition: transform .1s linear;
+  }
+}

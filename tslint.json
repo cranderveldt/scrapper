@@ -19,13 +19,13 @@
     "directive-selector": [
       true,
       "attribute",
-      "app",
+      "scrap",
       "camelCase"
     ],
     "component-selector": [
       true,
       "element",
-      "app",
+      "scrap",
       "kebab-case"
     ],
     "eofline": true,
@@ -82,7 +82,7 @@
     ],
     "semicolon": {
       "options": [
-        "always"
+        "never"
       ]
     },
     "space-before-function-paren": {

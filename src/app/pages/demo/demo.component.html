@@ -1,4 +1,4 @@
-<button (mousedown)="beginHeat()" (mouseup)="endHeat()" (mouseout)="endHeat()">Apply Heat</button>
+<button (mousedown)="beginHeat()" (mouseup)="endHeat()" (mouseout)="endHeat()" (touchstart)="beginHeat()" (touchend)="endHeat()">Apply Heat</button>
 
 <ul>
   <li>Temperature: {{ displayTemperature() }}</li>

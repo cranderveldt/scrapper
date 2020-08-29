@@ -13,11 +13,12 @@ button {
 
 .dials {
   .temperature {
-    width: 400px;
-    height: 400px;
+    width: 320px;
+    height: 320px;
     border-radius: 50%;
     background: white;
     position: relative;
+    transform: rotate(-45deg);
     &:after {
       content: "";
       background: #eee;
@@ -29,7 +30,7 @@ button {
       z-index: 0;
     }
     .indicator {
-      background: red;
+      background: #999;
       width: .5%;
       height: 3.5%;
       position: absolute;
@@ -51,6 +52,7 @@ button {
         height: 6%;
         left: 50% - .5%;
         top: 50% - 3%;
+        background: #666;
       }
     }
     .needle {
@@ -63,7 +65,7 @@ button {
       transform-origin: 100% 50%;
       transition: transform .1s linear;
       polygon {
-        fill: black;
+        fill: #d70000;
       }
     }
   }

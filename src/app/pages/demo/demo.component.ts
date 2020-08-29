@@ -14,7 +14,6 @@ export class DemoComponent {
   accelerationDelay = 800
   accMax = 800
   accMin = 20
-  EXPONENT = 1.05
   heatInc = 0
   private readonly heatIncMax = 20
   rampUp$: Observable<any>

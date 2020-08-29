@@ -16,7 +16,7 @@ export class DemoComponent {
   accMin = 20
   EXPONENT = 1.05
   heatInc = 0
-  private readonly heatIncMax = 200
+  private readonly heatIncMax = 20
   rampUp$: Observable<any>
   rampDown$: Observable<any>
   subscriptions: Subscription[] = []

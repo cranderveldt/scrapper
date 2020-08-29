@@ -16,7 +16,7 @@ export class DemoComponent {
   accMin = 20
   EXPONENT = 1.05
   heatInc = 0
-  private readonly heatIncMax = 20
+  private readonly heatIncMax = 200
   rampUp$: Observable<any>
   rampDown$: Observable<any>
   subscriptions: Subscription[] = []
@@ -72,13 +72,13 @@ export class DemoComponent {
     interval(this.constants.INTERVAL).pipe(
       tap(() => {
         this.panel.temperature -= 1
-        this.panel.temperature = Math.max(this.panel.temperature, this.constants.MIN_TEMP)
+        this.panel.temperature = Math.min(Math.max(this.panel.temperature, this.constants.MIN_TEMP), this.constants.MAX_TEMP)
       })
     ).subscribe()
   }
 
   heatUp(): void {
-    this.panel.temperature += this.heatInc
+    this.panel.temperature = Math.min(this.panel.temperature + this.heatInc, this.constants.MAX_TEMP)
   }
 
   temperatureAngle(): number {

@@ -10,8 +10,8 @@
 <div class="dials">
   <div class="temperature">
     <div class="indicator" *ngFor="let i of generateArray(40)"></div>
-    <svg class="needle" [style.transform]="temperatureDial()">
-      <polygon points="0,4 200,0 200,8"></polygon>
+    <svg class="needle" viewBox="0 0 100 100" preserveAspectRatio="none" [style.transform]="temperatureDial()">
+      <polygon points="0,50 100,0 100,100"></polygon>
     </svg>
 
   </div>

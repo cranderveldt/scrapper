@@ -1,5 +1,16 @@
 @use "sass:math";
 
+button {
+  background: red;
+  color: white;
+  border: 0;
+  padding: 16px 32px;
+  border-radius: 8px;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
 .dials {
   .temperature {
     width: 400px;
@@ -10,8 +21,8 @@
     &:after {
       content: "";
       background: #eee;
-      width: 200px;
-      height: 200px;
+      width: 50%;
+      height: 50%;
       position: absolute;
       bottom: 0;
       left: 0;
@@ -19,35 +30,36 @@
     }
     .indicator {
       background: red;
-      width: 2px;
-      height: 14px;
+      width: .5%;
+      height: 3.5%;
       position: absolute;
       z-index: 0;
       $count: 40;
-      left: calc(50% - 1px);
-      top: calc(50% - 7px);
+      left: 50% - .25%;
+      top: 50% - 1.75%;
       @for $i from 1 through $count {
         &:nth-child(#{$i}) {
           $i: $i - 1;
           $angle: $i * (360/$count);
-          transform: rotate(#{$angle}deg) translate(0, 193px);
+          $percent: if($i % ($count / 4) == 0, 800%, 1375%);
+          transform: rotate(#{$angle}deg) translate(0, $percent);
         }
       }
       &:nth-child(#{$count / 4}n + 1) {
         z-index: 1;
-        width: 4px;
-        height: 24px;
-        left: calc(50% - 2px);
-        top: calc(50% - 12px);
+        width: 1%;
+        height: 6%;
+        left: 50% - .5%;
+        top: 50% - 3%;
       }
     }
     .needle {
       position: absolute;
       z-index: 2;
-      top: calc(50% - 4px);
+      top: 50% - 1%;
       left: 0%;
-      width: 200px;
-      height: 8px;
+      width: 50%;
+      height: 2%;
       transform-origin: 100% 50%;
       transition: transform .1s linear;
       polygon {

@@ -1,97 +1,103 @@
-import { Component, OnInit } from '@angular/core'
+import { Component } from '@angular/core'
 import { Subscription, of, Observable, interval, iif } from 'rxjs'
-import { delay, tap, repeat, switchMap, takeUntil, map, delayWhen } from 'rxjs/operators'
+import { delay, tap, switchMap, map, delayWhen } from 'rxjs/operators'
 import { Panel } from 'src/app/models/panel.model'
+import { Constants } from 'src/app/models/constants.model'
 
 @Component({
   selector: 'scrap-demo',
   templateUrl: './demo.component.html',
   styleUrls: ['./demo.component.scss']
 })
-export class DemoComponent implements OnInit {
+
+export class DemoComponent {
   accelerationDelay = 800
   accMax = 800
   accMin = 20
   EXPONENT = 1.05
+  heatInc = 0
+  private readonly heatIncMax = 20
   rampUp$: Observable<any>
   rampDown$: Observable<any>
-  accSub: Subscription
-  deaccSub: Subscription
-  panel: Panel = {
-    thickness: 1,
-    durability: 100,
-    value: 100,
-    temperature: 27,
-  }
+  subscriptions: Subscription[] = []
+  panel: Panel
+  constants: Constants
 
-  constructor() {
-    const fullHeat$ = of(null).pipe(
-      tap(() => this.accelerationDelay = this.accMin),
-      switchMap(() => interval(this.accelerationDelay).pipe(
-        tap(() => this.heatUp()),
-      )),
-    )
-    this.rampUp$ = of(null).pipe(
-      delayWhen(event => of(null).pipe(delay(this.accelerationDelay))),
-      map(async () => {
-        this.accelerationDelay = Math.pow(this.accelerationDelay, 1 / this.EXPONENT)
-        this.heatUp()
-      }),
-      switchMap(() => iif(() => this.accelerationDelay <= this.accMin, fullHeat$, this.rampUp$)),
-    )
-    const zeroHeat$ = of(null).pipe(
-      tap(() => this.accelerationDelay = this.accMax)
-    )
-    this.rampDown$ = of(null).pipe(
-      delayWhen(event => of(null).pipe(delay(this.accelerationDelay))),
+  constructor(
+  ) {
+    this.constants = new Constants()
+    this.panel = {
+      thickness: 1,
+      durability: 100,
+      value: 100,
+      temperature: this.constants.MIN_TEMP,
+    }
+
+    this.rampUp$ = interval(this.constants.INTERVAL).pipe(
       tap(() => {
-        this.accelerationDelay = Math.pow(this.accelerationDelay, this.EXPONENT)
         this.heatUp()
-      }),
-      switchMap(() => iif(() => this.accelerationDelay >= this.accMax, zeroHeat$, this.rampDown$)),
+        if (this.heatInc < this.heatIncMax) {
+          this.heatInc += (1 / 16)
+          this.heatInc = Math.min(this.heatInc, this.heatIncMax)
+        }
+      })
     )
-  }
 
-  ngOnInit(): void {
-    // this.decayHeat()
-  }
-
-  currentDelay(): number {
-    return this.accelerationDelay
+    this.rampDown$ = interval(this.constants.INTERVAL).pipe(
+      tap(() => {
+        this.heatUp()
+        if (this.heatInc > 0) {
+          this.heatInc -= (1 / 8)
+          this.heatInc = Math.max(this.heatInc, 0)
+        }
+      })
+    )
   }
 
   public beginHeat(): void {
-    if (this.deaccSub) {
-      this.deaccSub.unsubscribe()
-    }
-    this.accSub = this.rampUp$.subscribe()
+    this.unsubscribe()
+    this.subscriptions.push(this.rampUp$.subscribe())
   }
 
-  endHeat(): void {
-    if (this.accSub) {
-      this.accSub.unsubscribe()
-      this.deaccSub = this.rampDown$.subscribe()
-    }
+  public endHeat(): void {
+    this.unsubscribe()
+    this.subscriptions.push(this.rampDown$.subscribe())
+  }
+
+  unsubscribe(): void {
+    this.subscriptions.forEach(sub => sub.unsubscribe())
   }
 
   decayHeat(): void {
-    interval(500).pipe(
+    interval(this.constants.INTERVAL).pipe(
       tap(() => {
         this.panel.temperature -= 1
-        this.panel.temperature = Math.max(this.panel.temperature, 27)
+        this.panel.temperature = Math.max(this.panel.temperature, this.constants.MIN_TEMP)
       })
     ).subscribe()
   }
 
   heatUp(): void {
-    this.panel.temperature += 1
+    this.panel.temperature += this.heatInc
   }
 
   temperatureAngle(): number {
-    return (this.panel.temperature - 27) / 1000 * 180
+    return (this.panel.temperature - this.constants.MIN_TEMP) / this.constants.MAX_TEMP * 270
   }
 
   temperatureDial(): string {
     return `rotate(${this.temperatureAngle()}deg)`
+  }
+
+  displayTemperature(): string {
+    return `${Math.floor(this.panel.temperature) / 100} K`
+  }
+
+  generateArray(num: number): any[] {
+    const array = []
+    for (let i = 0; i < num; i++) {
+      array.push(i)
+    }
+    return array
   }
 }

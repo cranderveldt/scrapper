@@ -1,11 +1,58 @@
+@use "sass:math";
+
 .dials {
-  padding-top: 400px;
   .temperature {
-    width: 200px;
-    height: 8px;
-    background: black;
-    border-radius: 4px 0 0 4px;
-    transform-origin: 100% 50%;
-    transition: transform .1s linear;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    background: white;
+    position: relative;
+    &:after {
+      content: "";
+      background: #eee;
+      width: 200px;
+      height: 200px;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      z-index: 0;
+    }
+    .indicator {
+      background: red;
+      width: 2px;
+      height: 14px;
+      position: absolute;
+      z-index: 0;
+      $count: 40;
+      left: calc(50% - 1px);
+      top: calc(50% - 7px);
+      @for $i from 1 through $count {
+        &:nth-child(#{$i}) {
+          $i: $i - 1;
+          $angle: $i * (360/$count);
+          transform: rotate(#{$angle}deg) translate(0, 193px);
+        }
+      }
+      &:nth-child(#{$count / 4}n + 1) {
+        z-index: 1;
+        width: 4px;
+        height: 24px;
+        left: calc(50% - 2px);
+        top: calc(50% - 12px);
+      }
+    }
+    .needle {
+      position: absolute;
+      z-index: 2;
+      top: calc(50% - 4px);
+      left: 0%;
+      width: 200px;
+      height: 8px;
+      transform-origin: 100% 50%;
+      transition: transform .1s linear;
+      polygon {
+        fill: black;
+      }
+    }
   }
 }

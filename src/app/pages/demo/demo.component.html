@@ -1,11 +1,18 @@
 <button (mousedown)="beginHeat()" (mouseup)="endHeat()" (mouseout)="endHeat()">Apply Heat</button>
 
 <ul>
-  <li>Temperature: {{ panel.temperature }}</li>
+  <li>Temperature: {{ displayTemperature() }}</li>
   <li>Durability: {{ panel.durability }}</li>
   <li>Value: {{ panel.value }}</li>
+  <li>HeatInc: {{ heatInc }}</li>
 </ul>
 
 <div class="dials">
-  <div class="temperature" [style.transform]="temperatureDial()"></div>
+  <div class="temperature">
+    <div class="indicator" *ngFor="let i of generateArray(40)"></div>
+    <svg class="needle" [style.transform]="temperatureDial()">
+      <polygon points="0,4 200,0 200,8"></polygon>
+    </svg>
+
+  </div>
 </div>

@@ -21,15 +21,25 @@ export class DemoComponent {
   subscriptions: Subscription[] = []
   panel: Panel
   constants: Constants
+  loop: Function
+  heatActive = false
 
   constructor(
   ) {
     this.constants = new Constants()
     this.panel = {
-      thickness: 1,
+      thickness: 12,
       durability: 100,
       value: 100,
       temperature: this.constants.MIN_TEMP,
+    }
+
+    this.loop = () => {
+      if (this.heatActive) {
+        this.increaseHeat()
+      } else {
+        this.decreaseHeat()
+      }
     }
 
     this.rampUp$ = interval(this.constants.INTERVAL).pipe(
@@ -65,6 +75,22 @@ export class DemoComponent {
 
   unsubscribe(): void {
     this.subscriptions.forEach(sub => sub.unsubscribe())
+  }
+
+  increaseHeat(): void {
+    this.heatUp()
+    if (this.heatInc < this.heatIncMax) {
+      this.heatInc += (1 / 16)
+      this.heatInc = Math.min(this.heatInc, this.heatIncMax)
+    }
+  }
+
+  decreaseHeat(): void {
+    this.heatUp()
+    if (this.heatInc > 0) {
+      this.heatInc -= (1 / 8)
+      this.heatInc = Math.max(this.heatInc, 0)
+    }
   }
 
   decayHeat(): void {

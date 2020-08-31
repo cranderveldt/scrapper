@@ -1,6 +1,6 @@
 export interface Panel {
-  thickness: number
-  durability: number
-  value: number
-  temperature: number
+  thickness: number // millimeters
+  durability: number // %
+  value: number // %
+  temperature: number // Kelvin
 }
